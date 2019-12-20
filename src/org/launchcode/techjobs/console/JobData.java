@@ -7,9 +7,7 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -42,16 +40,17 @@ public class JobData {
                 values.add(aValue);
             }
         }
-
+        Collections.sort(values);
         return values;
     }
+
 
     public static ArrayList<HashMap<String, String>> findAll() {
 
         // load data, if not already loaded
         loadData();
 
-        return allJobs;
+        return new ArrayList(allJobs);
     }
 
     /**
@@ -70,18 +69,41 @@ public class JobData {
         // load data, if not already loaded
         loadData();
 
+        String searchTerm = value.toUpperCase();
+//        Create a list to hold the jobs that we will get from the search
         ArrayList<HashMap<String, String>> jobs = new ArrayList<>();
-
+//       Loop thru the allJobs list
         for (HashMap<String, String> row : allJobs) {
-
+//            initialize aValue with the field in the column column
             String aValue = row.get(column);
-
-            if (aValue.contains(value)) {
+//            if aValue contains the search value then add it to the jobs list
+            if (aValue.toUpperCase().contains(searchTerm)) {
                 jobs.add(row);
             }
         }
 
         return jobs;
+    }
+
+    public static ArrayList<HashMap<String, String>> findByValue(String aValue){
+        //load data
+        loadData();
+
+        String searchTerm = aValue.toUpperCase();
+        //intialize the arraylist that will hold the found jobs
+        ArrayList<HashMap<String, String>> someJobs = new ArrayList<>();
+        //loop through the jobs
+        for(HashMap<String, String> job : allJobs){
+            //loop through the fields in each job
+            for(Map.Entry<String, String> field : job.entrySet()){
+                //if the field value contains the searchTerm and that job isn't in someJobs then add it
+                if(field.getValue().toUpperCase().contains(searchTerm) && !someJobs.contains(job)){
+                    someJobs.add(job);
+                }
+            }
+        }
+        //return the arraylist of found jobs
+        return someJobs;
     }
 
     /**

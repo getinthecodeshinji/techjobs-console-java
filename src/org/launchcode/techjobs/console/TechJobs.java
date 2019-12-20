@@ -1,8 +1,6 @@
 package org.launchcode.techjobs.console;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by LaunchCode
@@ -14,15 +12,19 @@ public class TechJobs {
     public static void main (String[] args) {
 
         // Initialize our field map with key/name pairs
-        HashMap<String, String> columnChoices = new HashMap<>();
-        columnChoices.put("core competency", "Skill");
+        //Make list to display choices in console
+        LinkedHashMap<String, String> columnChoices = new LinkedHashMap<>();
+        columnChoices.put("all", "All");
         columnChoices.put("employer", "Employer");
         columnChoices.put("location", "Location");
         columnChoices.put("position type", "Position Type");
-        columnChoices.put("all", "All");
+        columnChoices.put("core competency", "Skill");
+
+//        Display the choices
+        //System.out.println(columnChoices);
 
         // Top-level menu options
-        HashMap<String, String> actionChoices = new HashMap<>();
+        LinkedHashMap<String, String> actionChoices = new LinkedHashMap<>();
         actionChoices.put("search", "Search");
         actionChoices.put("list", "List");
 
@@ -61,7 +63,7 @@ public class TechJobs {
                 String searchTerm = in.nextLine();
 
                 if (searchField.equals("all")) {
-                    System.out.println("Search all fields not yet implemented.");
+                    printJobs(JobData.findByValue(searchTerm));
                 } else {
                     printJobs(JobData.findByColumnAndValue(searchField, searchTerm));
                 }
@@ -70,7 +72,7 @@ public class TechJobs {
     }
 
     // ﻿Returns the key of the selected item from the choices Dictionary
-    private static String getUserSelection(String menuHeader, HashMap<String, String> choices) {
+    private static String getUserSelection(String menuHeader, LinkedHashMap<String, String> choices) {
 
         Integer choiceIdx;
         Boolean validChoice = false;
@@ -110,7 +112,25 @@ public class TechJobs {
 
     // Print a list of jobs
     private static void printJobs(ArrayList<HashMap<String, String>> someJobs) {
+        //if someJobs contains at least one job
+        if(someJobs.size() > 0){
+            //loop through someJobs retrieving each job
 
-        System.out.println("printJobs is not implemented yet");
+
+            for(HashMap<String, String> job : someJobs){
+                System.out.println("*****");
+
+                //loop through each job printing each field (k/v pair)
+                for(Map.Entry<String, String> field : job.entrySet()){
+                    System.out.println(field.getKey() + ": " + field.getValue());
+                }
+                System.out.println("*****");
+            }
+
+            System.out.println("\nJobs found: " + someJobs.size());
+        }else{
+            System.out.println("Nothing to see here!");
+        }
+
     }
 }
